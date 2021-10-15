@@ -6,9 +6,43 @@
 
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
+#include "swedish_keys.h"
+
+#define BASE 0
+#define MOUSE 1
+#define MOVE 2
+#define BRACKETS 3
+#define SYMBOLS 4
+#define NUMBERS 5
+#define FNUMBERS 6
+#define WINDOW 7
+#define SHORT 8
 
 / {
-	keymap {
+  behaviors {
+        // Customized mod_tap and layer_tap:
+        // - Enables quick_tap. Useful for backspace/space.
+        // - Switch to balanced flavor to allow for fast (back)space + character rollovers.
+        mt_: custom_mod_tap {
+            compatible = "zmk,behavior-hold-tap";
+            label = "MOD_TAP";
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <200>;
+                        quick_tap_ms = <500>;
+            bindings = <&kp>, <&kp>;
+        };
+        lt_: custom_layer_tap {
+            compatible = "zmk,behavior-hold-tap";
+            label = "LAYER_TAP";
+            #binding-cells = <2>;
+            flavor = "balanced";
+            tapping-term-ms = <200>;
+                        quick_tap_ms = <500>;
+            bindings = <&mo>, <&kp>;
+        };
+    };
+  keymap {
 		compatible = "zmk,keymap";
 
 		default_layer {
@@ -18,10 +52,10 @@
 // | SHIFT |  Z  |  X  |  C   |  V   |  B   | L SHIFT | L SHIFT |  | L SHIFT | L SHIFT |  N   |  M    |  ,    |  .   |   /   | CTRL |
 //                     | GUI  | DEL  | RET  |  SPACE  |   ESC   |  |   RET   |  SPACE  | TAB  | BSPC  | R-ALT |
 			bindings = <
-	&kp TAB   &kp Q &kp W &kp E &kp R &kp T                                                &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSLH
-	&kp ESC   &kp A &kp S &kp D &kp F &kp G                                                &kp H &kp J  &kp K     &kp L   &kp SEMI &kp SQT
-	&kp LSHFT &kp Z &kp X &kp C &kp V &kp B &kp LSHFT &kp LSHFT        &kp LSHFT &kp LSHFT &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp RCTRL
-	                 &kp LGUI &kp DEL &kp SPACE &kp BSPC &kp ESC        &kp RET  &kp SPACE  &kp DEL &kp BSPC &kp RALT
+	&kp TAB   &kp Q &kp W       &kp E        &kp R        &kp T                                          &kp Y        &kp U         &kp I       &kp O       &kp P               &kp SE_AO
+	&kp ESC   &kp A &_mt LALT S &_mt LSHFT D &_mt LCTRL F &kp G                                          &kp H        &_mt RCTRL J  &_mt LSHT K &_mt RALT L &_lt BRACKETS SE_OE &kp SE_AE
+	&kp LSHFT &kp Z &kp X       &kp C        &kp V        &kp B &kp LSHFT &kp LSHFT &kp LSHFT &kp LSHFT  &kp N        &kp M         &kp COMMA   &kp DOT     &kp FSLH            &kp RCTRL
+	                 &kp LGUI &kp DEL &kp SPACE &kp BSPC &kp ESC                                         &mo FNUMBERS &_lt MOVE DEL &kp RET     &kp BSPC    &kp RALT
 			>;
 
 			sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp PG_UP PG_DN>;
